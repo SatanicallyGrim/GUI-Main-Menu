@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     public Resolution[] resolutions;
     public Dropdown resolution;
     public AudioMixer masterSound;
+    
     #endregion
     #region Audio Settings
     public void ChangeAudio(float volume)
@@ -44,6 +45,7 @@ public class GameManager : MonoBehaviour
     }
     public void Start()
     {
+        
         resolutions = Screen.resolutions;
         resolution.ClearOptions();
         List<string> options = new List<string>();
@@ -68,6 +70,8 @@ public class GameManager : MonoBehaviour
         Screen.SetResolution(res.width, res.height, Screen.fullScreen);
     }
     #endregion
+
+    
     public void LoadScene(int levelID)
     {
         SceneManager.LoadScene(levelID);
