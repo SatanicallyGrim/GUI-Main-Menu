@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Audio;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,7 +12,9 @@ public class GameManager : MonoBehaviour
     public Resolution[] resolutions;
     public Dropdown resolution;
     public AudioMixer masterSound;
-    
+    public GameObject loadingScreen;
+    public TextMeshProUGUI progressText;
+    public Image loadingBar;
     #endregion
     #region Audio Settings
     public void ChangeAudio(float volume)
@@ -72,9 +75,29 @@ public class GameManager : MonoBehaviour
     #endregion
 
     
-    public void LoadScene(int levelID)
+    public void SwitchScene(int levelID)
     {
         SceneManager.LoadScene(levelID);
+    }
+    IEnumerator LoadAsyncronysly(int levelID)
+    {
+        loadingScreen.SetActive(true);
+        //yield return new WaitForSeconds(1);
+        AsyncOperation operation = SceneManager.LoadSceneAsync(levelID);
+        
+
+        while (!operation.isDone)
+        {
+            float progress = Mathf.Clamp01(operation.progress / 0.9f);
+            
+            loadingBar.fillAmount = progress;
+            progressText.text = Mathf.Round(progress * 100) + "%";
+            yield return null;
+        }
+    }
+    public void LoadAsync(int levelID)
+    {
+        StartCoroutine(LoadAsyncronysly(levelID));
     }
     public void ExitApp()
     {
