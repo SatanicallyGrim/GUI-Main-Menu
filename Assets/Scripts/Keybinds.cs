@@ -2,79 +2,79 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class Keybinds : MonoBehaviour
 {
     [SerializeField]
     public static Dictionary<string, KeyCode> keys = new Dictionary<string, KeyCode>();
-    [System.Serializable] // makes code visable when used in an array
-    public struct KeyUISetup
+    [System.Serializable]
+    public struct KeyUiSetup
     {
         public string keyName;
-        public Text keyDisplayText;
+        public TextMeshProUGUI keyDisplayText;
         public string defaultKey;
     }
-    //Keynames array + deault keys
-    public KeyUISetup[] baseSetup;
-    public GameObject currentKey;
-    public Color32 changedKey = new Color32(39, 171, 249, 255);
-    public Color32 selectedKey = new Color32(239, 116, 36, 255);
-    // Start is called before the first frame update
-    void Start()
+    public KeyUiSetup[] baseSetup;
+    public GameObject currentButton;
+    public Color32 changedKey = Color.yellow;
+    public Color32 selectedKey = Color.blue;
+
+    public void Awake()
     {
         for (int i = 0; i < baseSetup.Length; i++)
         {
+            baseSetup[i].keyDisplayText.transform.parent.name = baseSetup[i].keyName;
             keys.Add(baseSetup[i].keyName, (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString(baseSetup[i].keyName, baseSetup[i].defaultKey)));
             baseSetup[i].keyDisplayText.text = keys[baseSetup[i].keyName].ToString();
         }
     }
-    public void SavedKeys()
+    public void SaveKeys()
     {
-        foreach (var key in keys)
+        foreach (var thisKey in keys)
         {
-            PlayerPrefs.SetString(key.Key, key.Value.ToString());
+            PlayerPrefs.SetString(thisKey.Key, thisKey.Value.ToString());
         }
         PlayerPrefs.Save();
+        WHiteButtons();
     }
-    public void ChangedKey(GameObject clickedKey)
+    public void WHiteButtons()
     {
-        currentKey = clickedKey;
-        if (clickedKey != null)
+        for (int i = 0; i < baseSetup.Length; i++)
         {
-            currentKey.GetComponent<Image>().color = selectedKey;
+            baseSetup[i].keyDisplayText.transform.parent.GetComponent<Image>().color = Color.white;
+        }
+    }
+    public void ChangeKey(GameObject clickedKeys)
+    {
+        currentButton = clickedKeys;
+        if (clickedKeys != null)
+        {
+            currentButton.GetComponent<Image>().color = selectedKey;
         }
     }
     private void OnGUI()
     {
         string newKey = "";
         Event e = Event.current;
-        if (currentKey != null)
+
+        if (currentButton == null)
+            return;
+        if (e.isKey)
         {
-            if (e.isKey)
-            {
-                newKey = e.keyCode.ToString();
-            }
-            if (Input.GetKey(KeyCode.LeftShift))
-            {
-                newKey = "LeftShift";
-            }
-            if (Input.GetKey(KeyCode.RightShift))
-            {
-                newKey = "RightShift";
-            }
-            if (newKey != "")
-            {
-                keys[currentKey.name] = (KeyCode)System.Enum.Parse(typeof(KeyCode), newKey);
-                currentKey.GetComponentInChildren<Text>().text = newKey;
-                currentKey.GetComponent<Image>().color = changedKey;
-                currentKey = null;
-            }
+            newKey = e.keyCode.ToString();
         }
 
-    }
-    // Update is called once per frame
-    void Update()
-    {
-
+        if (newKey != "")
+        {
+            //change our key in the dictionary to the key we just pressed
+            keys[currentButton.name] = (KeyCode)System.Enum.Parse(typeof(KeyCode), newKey);
+            //change the display text
+            currentButton.GetComponentInChildren<TextMeshProUGUI>().text = newKey;
+            //change the colour to display changed Key
+            currentButton.GetComponent<Image>().color = changedKey;
+            //reset to avoid errors with future rebinds
+            currentButton = null;
+        }
     }
 }

@@ -82,7 +82,7 @@ public class GameManager : MonoBehaviour
     IEnumerator LoadAsyncronysly(int levelID)
     {
         loadingScreen.SetActive(true);
-        //yield return new WaitForSeconds(1);
+        yield return new WaitForSecondsRealtime(1);
         AsyncOperation operation = SceneManager.LoadSceneAsync(levelID);
         
 
