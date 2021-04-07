@@ -10,12 +10,15 @@ public class GameManager : MonoBehaviour
 {
     #region Variables
     public Resolution[] resolutions;
-    public Dropdown resolution;
     public AudioMixer masterSound;
     public GameObject loadingScreen;
     public TextMeshProUGUI progressText;
     public Image loadingBar;
+    public Toggle fullscreenToggle;
+    public Slider musicSlider;
+    public Dropdown resoloutionDropdown;
     #endregion
+
     #region Audio Settings
     public void ChangeAudio(float volume)
     {
@@ -48,24 +51,31 @@ public class GameManager : MonoBehaviour
     }
     public void Start()
     {
-        
-        resolutions = Screen.resolutions;
-        resolution.ClearOptions();
-        List<string> options = new List<string>();
-        int currentResolutionIndex = 0;
+        LoadPlayerPrefs();
+        SetUpResoloutions();
 
-        for (int i = 0; i < resolutions.Length; i++)
+    }
+    public void SetUpResoloutions()
+    {
+        resolutions = Screen.resolutions;
+
+        resoloutionDropdown.ClearOptions();
+        List<string> options = new List<string>();
+        int currentResoloutionIndex = 0;
+        foreach (Resolution resolution in resolutions)
         {
-            string option = resolutions[i].width + "x" + resolutions[i].height;
+            string option = resolution.width + "x" + resolution.height + "@" + resolution.refreshRate;
             options.Add(option);
-            if(resolutions[i].width == Screen.currentResolution.width && resolutions[i].height == Screen.currentResolution.height)
+            if (resolution.width == Screen.currentResolution.width && resolution.height == Screen.currentResolution.height && resolution.refreshRate == Screen.currentResolution.refreshRate)
             {
-                currentResolutionIndex = i;
+                currentResoloutionIndex = options.Count - 1;
             }
+
+
         }
-        resolution.AddOptions(options);
-        resolution.value = currentResolutionIndex;
-        resolution.RefreshShownValue();
+        resoloutionDropdown.AddOptions(options);
+        resoloutionDropdown.value = currentResoloutionIndex;
+        resoloutionDropdown.RefreshShownValue();
     }
     public void SetResolution(int resolutionIndex)
     {
@@ -74,7 +84,7 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
-    
+    #region Loading
     public void SwitchScene(int levelID)
     {
         SceneManager.LoadScene(levelID);
@@ -107,4 +117,35 @@ public class GameManager : MonoBehaviour
         Application.Quit();
         Debug.Log("Game Exited");
     }
+    #endregion
+    #region Player Prefs
+    public void SavePlayerPrefs()
+    {
+        float volume;
+        if (masterSound.GetFloat("volume", out volume))
+        {
+            PlayerPrefs.SetFloat("volume", volume);
+        }
+
+        PlayerPrefs.SetInt("fullscreen", fullscreenToggle.isOn ? 0 : 1);
+    }
+    public void LoadPlayerPrefs()
+    {
+        if (PlayerPrefs.HasKey("volume"))
+        {
+            float sound = PlayerPrefs.GetFloat("volume");
+            masterSound.SetFloat("volume", sound);
+            musicSlider.value = sound;
+        }
+        if (PlayerPrefs.HasKey("fullscreen"))
+        {
+            fullscreenToggle.isOn = PlayerPrefs.GetInt("fullscreen") == 0 ? false : true;
+            SetFullscreen(fullscreenToggle.isOn);
+        }
+    }
+    private void OnDisable()
+    {
+        SavePlayerPrefs();
+    }
+    #endregion
 }
