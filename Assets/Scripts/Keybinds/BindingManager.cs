@@ -47,6 +47,21 @@ public class BindingManager : MonoBehaviour
             binding.Load();
         }
     }
+    public static bool BindingPressed(string _key)
+    {
+        // Attempt to retrieve the binding
+        Binding binding = GetBinding(_key);
+
+        if (binding != null)
+        {
+            // We got the binding so get its pressed state
+            return binding.Pressed();
+        }
+
+        // No binding matches the passed key so log a message and return false
+        Debug.LogWarning("No binding matches the passed key: " + _key);
+        return false;
+    }
     public static bool BindingHeld(string _key)
     {
         //get the binding
