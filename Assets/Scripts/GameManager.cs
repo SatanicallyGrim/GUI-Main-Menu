@@ -24,6 +24,10 @@ public class GameManager : MonoBehaviour
     {
         masterSound.SetFloat("volume", volume);
     }
+    public void ChangeSoundEffects(float soundEffects)
+    {
+        masterSound.SetFloat("SoundEffects", soundEffects);
+    }
     public void MuteAudio(bool isMuted)
     {
         if (isMuted)

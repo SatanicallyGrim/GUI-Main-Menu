@@ -299,7 +299,7 @@ public class CustomisationSet : MonoBehaviour
     }
     private void OnGUI()
     {
-        
+
         #region GUI Value Setup
         //16:9
         Vector2 screen = new Vector2(Screen.width / 16, Screen.height / 9);
@@ -319,7 +319,7 @@ public class CustomisationSet : MonoBehaviour
             {
                 SetTexture(matName[i], -1);
             }
-            GUI.Box(new Rect(mid, y + i * y, label, y),matName[i]);
+            GUI.Box(new Rect(mid, y + i * y, label, y), matName[i]);
             if (GUI.Button(new Rect(right, y + i * y, x, y), ">"))
             {
                 SetTexture(matName[i], 1);
@@ -329,17 +329,17 @@ public class CustomisationSet : MonoBehaviour
         #region Choose Class
         float classX = 12.75f * screen.x;
         float h = 0;
-        if (GUI.Button(new Rect(classX,y+h*y,4*x,y),classButton))
+        if (GUI.Button(new Rect(classX, y + h * y, 4 * x, y), classButton))
         {
             showDropdown = !showDropdown;
         }
         if (showDropdown)
         {
-            scrollpos = GUI.BeginScrollView(new Rect(classX,y+h*y,4*x,4*y), scrollpos, new Rect(0,0,0,selectedClass.Length * y), false,true);
+            scrollpos = GUI.BeginScrollView(new Rect(classX, y + h * y, 4 * x, 4 * y), scrollpos, new Rect(0, 0, 0, selectedClass.Length * y), false, true);
 
             for (int i = 0; i < selectedClass.Length; i++)
             {
-                if (GUI.Button(new Rect(0,y+i*y,3*x,y),selectedClass[i]))
+                if (GUI.Button(new Rect(0, y + i * y, 3 * x, y), selectedClass[i]))
                 {
                     ChoosenClass(i);
                     classButton = selectedClass[i];
@@ -350,19 +350,19 @@ public class CustomisationSet : MonoBehaviour
         }
         #endregion
         #region Set Stats
-        GUI.Box(new Rect(classX,6*y,4*x,y), "Points " + statPoints);
+        GUI.Box(new Rect(classX, 6 * y, 4 * x, y), "Points " + statPoints);
         for (int i = 0; i < characterStats.Length; i++)
         {
             if (statPoints > 0)
             {
-                if (GUI.Button(new Rect(classX-x, 7 * y + i * y, x,y),"+"))
+                if (GUI.Button(new Rect(classX - x, 7 * y + i * y, x, y), "+"))
                 {
                     statPoints--;
                     characterStats[i].tempStats++;
                 }
             }
-            GUI.Box(new Rect(classX, 7 * y + i * y, 4 * x,y), characterStats[i].baseStatsName + ": "+ (characterStats[i].tempStats>0));
-            if (statPoints< 10 && characterStats[i].tempStats > 0)
+            GUI.Box(new Rect(classX, 7 * y + i * y, 4 * x, y), characterStats[i].baseStatsName + ": " + (characterStats[i].baseStats + characterStats[i].tempStats));
+            if (statPoints < 10 && characterStats[i].tempStats > 0)
             {
                 if (GUI.Button(new Rect(classX + 4 * x, 7 * y + i * y, x, y), "-"))
                 {
@@ -372,8 +372,8 @@ public class CustomisationSet : MonoBehaviour
             }
         }
         #endregion
-        charName = GUI.TextField(new Rect(left, 7 * y, 5 * x, y), charName,32);
-        if (GUI.Button(new Rect(left, 8 * y, 5 * x, y),"Save And Play"))
+        charName = GUI.TextField(new Rect(left, 7 * y, 5 * x, y), charName, 32);
+        if (GUI.Button(new Rect(left, 8 * y, 5 * x, y), "Save And Play"))
         {
             SaveCharacter();
             SceneManager.LoadScene(2);
@@ -390,6 +390,10 @@ public class CustomisationSet : MonoBehaviour
     public void SetName(string characterName)
     {
         charName = characterName;
+    }
+    public void ChooseYourClass()
+    {
+        
     }
 }
 public enum CharacterClass
