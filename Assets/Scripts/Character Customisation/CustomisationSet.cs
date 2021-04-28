@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class CustomisationSet : MonoBehaviour
+public class CustomisationSet : Status
 {
     #region Variables
     [Header("Character Name")]
@@ -20,6 +20,22 @@ public class CustomisationSet : MonoBehaviour
         public int baseStats;
         public int tempStats;
     }
+    [System.Serializable]
+    public struct PointUI
+    {
+
+        public Status.StatBlock stat;
+        public Text NameDisplay;
+        public GameObject plusButton;
+        public GameObject minusButton;
+    };
+    public PointUI[] pointSystem;
+    public Text pointsText;
+    public void TextUpdate()
+    {
+        pointsText.text = "Points: " + statPoints;
+    }
+
     public Stats[] characterStats;
     [Header("Dropdown Menu")]
     public bool showDropdown;
@@ -43,6 +59,7 @@ public class CustomisationSet : MonoBehaviour
     public int eyesMax, mouthMax, hairMax, clothesMax, armourMax;
     [Header("Mat Name")]
     public string[] matName = new string[6];
+
     #endregion
     private void Start()
     {
@@ -81,6 +98,15 @@ public class CustomisationSet : MonoBehaviour
             Texture2D tempTexture = Resources.Load("Character/Armour_" + i) as Texture2D;
             armour.Add(tempTexture);
         }
+        #region Point System
+        ChoosenClass(0);
+        TextUpdate();
+        for (int i = 0; i < pointSystem.Length; i++)
+        {
+            pointSystem[i].NameDisplay.text = pointSystem[i].stat.characterName + ": " + (pointSystem[i].stat.value + pointSystem[i].stat.tempValue);
+            pointSystem[i].minusButton.SetActive(false);
+        }
+        #endregion
     }
     public void SetTexture(string type, int dir)
     {
@@ -278,6 +304,14 @@ public class CustomisationSet : MonoBehaviour
                 break;
 
         }
+        for (int i = 0; i < pointSystem.Length; i++)
+        {
+            pointSystem[i].stat.tempValue = 0;
+            statPoints = 10;
+            pointSystem[i].NameDisplay.text = characterStats[i].baseStatsName + ": " + (characterStats[i].baseStats + characterStats[i].tempStats);
+            pointSystem[i].minusButton.SetActive(false);
+            pointSystem[i].plusButton.SetActive(true);
+        }
     }
     public void SaveCharacter()
     {
@@ -297,88 +331,88 @@ public class CustomisationSet : MonoBehaviour
         }
         PlayerPrefs.SetString("CharacterClass", selectedClass[selectedClassIndex]);
     }
-    private void OnGUI()
-    {
+    //private void OnGUI()
+    //{
 
-        #region GUI Value Setup
-        //16:9
-        Vector2 screen = new Vector2(Screen.width / 16, Screen.height / 9);
+    //    #region GUI Value Setup
+    //    //16:9
+    //    Vector2 screen = new Vector2(Screen.width / 16, Screen.height / 9);
 
-        float left = 0.25f * screen.x;
-        float mid = 0.75f * screen.x;
-        float right = 2.25f * screen.x;
+    //    float left = 0.25f * screen.x;
+    //    float mid = 0.75f * screen.x;
+    //    float right = 2.25f * screen.x;
 
-        float x = 0.5f * screen.x;
-        float y = 0.5f * screen.x;
-        float label = 1.5f * screen.x;
-        #endregion
-        #region Customisation Textures
-        for (int i = 0; i < matName.Length; i++)
-        {
-            if (GUI.Button(new Rect(left, y + i * y, x, y), "<"))
-            {
-                SetTexture(matName[i], -1);
-            }
-            GUI.Box(new Rect(mid, y + i * y, label, y), matName[i]);
-            if (GUI.Button(new Rect(right, y + i * y, x, y), ">"))
-            {
-                SetTexture(matName[i], 1);
-            }
-        }
-        #endregion
-        #region Choose Class
-        float classX = 12.75f * screen.x;
-        float h = 0;
-        if (GUI.Button(new Rect(classX, y + h * y, 4 * x, y), classButton))
-        {
-            showDropdown = !showDropdown;
-        }
-        if (showDropdown)
-        {
-            scrollpos = GUI.BeginScrollView(new Rect(classX, y + h * y, 4 * x, 4 * y), scrollpos, new Rect(0, 0, 0, selectedClass.Length * y), false, true);
+    //    float x = 0.5f * screen.x;
+    //    float y = 0.5f * screen.x;
+    //    float label = 1.5f * screen.x;
+    //    #endregion
+    //    #region Customisation Textures
+    //    for (int i = 0; i < matName.Length; i++)
+    //    {
+    //        if (GUI.Button(new Rect(left, y + i * y, x, y), "<"))
+    //        {
+    //            SetTexture(matName[i], -1);
+    //        }
+    //        GUI.Box(new Rect(mid, y + i * y, label, y), matName[i]);
+    //        if (GUI.Button(new Rect(right, y + i * y, x, y), ">"))
+    //        {
+    //            SetTexture(matName[i], 1);
+    //        }
+    //    }
+    //    #endregion
+    //    #region Choose Class
+    //    float classX = 12.75f * screen.x;
+    //    float h = 0;
+    //    if (GUI.Button(new Rect(classX, y + h * y, 4 * x, y), classButton))
+    //    {
+    //        showDropdown = !showDropdown;
+    //    }
+    //    if (showDropdown)
+    //    {
+    //        scrollpos = GUI.BeginScrollView(new Rect(classX, y + h * y, 4 * x, 4 * y), scrollpos, new Rect(0, 0, 0, selectedClass.Length * y), false, true);
 
-            for (int i = 0; i < selectedClass.Length; i++)
-            {
-                if (GUI.Button(new Rect(0, y + i * y, 3 * x, y), selectedClass[i]))
-                {
-                    ChoosenClass(i);
-                    classButton = selectedClass[i];
-                    showDropdown = false;
-                }
-            }
-            GUI.EndScrollView();
-        }
-        #endregion
-        #region Set Stats
-        GUI.Box(new Rect(classX, 6 * y, 4 * x, y), "Points " + statPoints);
-        for (int i = 0; i < characterStats.Length; i++)
-        {
-            if (statPoints > 0)
-            {
-                if (GUI.Button(new Rect(classX - x, 7 * y + i * y, x, y), "+"))
-                {
-                    statPoints--;
-                    characterStats[i].tempStats++;
-                }
-            }
-            GUI.Box(new Rect(classX, 7 * y + i * y, 4 * x, y), characterStats[i].baseStatsName + ": " + (characterStats[i].baseStats + characterStats[i].tempStats));
-            if (statPoints < 10 && characterStats[i].tempStats > 0)
-            {
-                if (GUI.Button(new Rect(classX + 4 * x, 7 * y + i * y, x, y), "-"))
-                {
-                    statPoints++;
-                    characterStats[i].tempStats--;
-                }
-            }
-        }
-        #endregion
-        charName = GUI.TextField(new Rect(left, 7 * y, 5 * x, y), charName, 32);
-        if (GUI.Button(new Rect(left, 8 * y, 5 * x, y), "Save And Play"))
-        {
-            SaveCharacter();
-            SceneManager.LoadScene(2);
-        }
-    }
+    //        for (int i = 0; i < selectedClass.Length; i++)
+    //        {
+    //            if (GUI.Button(new Rect(0, y + i * y, 3 * x, y), selectedClass[i]))
+    //            {
+    //                ChoosenClass(i);
+    //                classButton = selectedClass[i];
+    //                showDropdown = false;
+    //            }
+    //        }
+    //        GUI.EndScrollView();
+    //    }
+    //    #endregion
+    //    #region Set Stats
+    //    GUI.Box(new Rect(classX, 6 * y, 4 * x, y), "Points " + statPoints);
+    //    for (int i = 0; i < characterStats.Length; i++)
+    //    {
+    //        if (statPoints > 0)
+    //        {
+    //            if (GUI.Button(new Rect(classX - x, 7 * y + i * y, x, y), "+"))
+    //            {
+    //                statPoints--;
+    //                characterStats[i].tempStats++;
+    //            }
+    //        }
+    //        GUI.Box(new Rect(classX, 7 * y + i * y, 4 * x, y), characterStats[i].baseStatsName + ": " + (characterStats[i].baseStats + characterStats[i].tempStats));
+    //        if (statPoints < 10 && characterStats[i].tempStats > 0)
+    //        {
+    //            if (GUI.Button(new Rect(classX + 4 * x, 7 * y + i * y, x, y), "-"))
+    //            {
+    //                statPoints++;
+    //                characterStats[i].tempStats--;
+    //            }
+    //        }
+    //    }
+    //    #endregion
+    //    charName = GUI.TextField(new Rect(left, 7 * y, 5 * x, y), charName, 32);
+    //    if (GUI.Button(new Rect(left, 8 * y, 5 * x, y), "Save And Play"))
+    //    {
+    //        SaveCharacter();
+    //        SceneManager.LoadScene(2);
+    //    }
+    //}
     public void BackArray(string type)
     {
         SetTexture(type, -1);
@@ -391,9 +425,43 @@ public class CustomisationSet : MonoBehaviour
     {
         charName = characterName;
     }
-    public void ChooseYourClass()
+    public void SetPointspos(int i)
     {
-        
+        //change the values
+        statPoints--;
+        characterStats[i].tempStats++;
+        //if we have no pints hid the pos button
+        if (statPoints <= 0)
+        {
+            for (int button = 0; button < pointSystem.Length; button++)
+            {
+                pointSystem[button].plusButton.SetActive(false);
+            }
+        }
+        if (pointSystem[i].minusButton.activeSelf == false)
+        {
+            pointSystem[i].minusButton.SetActive(true);
+        }
+        pointSystem[i].NameDisplay.text = characterStats[i].baseStatsName + ": " + (characterStats[i].baseStats + characterStats[i].tempStats);
+        TextUpdate();
+    }
+    public void SetPointNeg(int i)
+    {
+        statPoints++;
+        characterStats[i].tempStats--;
+        if (pointSystem[i].stat.tempValue <= 0)
+        {
+            pointSystem[i].minusButton.SetActive(false);
+        }
+        if (pointSystem[i].plusButton.activeSelf == false)
+        {
+            for (int button = 0; button < pointSystem.Length; button++)
+            {
+                pointSystem[button].plusButton.SetActive(true);
+            }
+        }
+        pointSystem[i].NameDisplay.text = characterStats[i].baseStatsName + ": " + (characterStats[i].baseStats + characterStats[i].tempStats);
+        TextUpdate();
     }
 }
 public enum CharacterClass

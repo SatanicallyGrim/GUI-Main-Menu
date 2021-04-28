@@ -1,16 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
-public class Status : MonoBehaviour
+public class Status : PlayerStats
 {
-    #region Vairables
-    [SerializeField] private float charHp = 100;
-    [SerializeField] private float charMaxHP;
-    [SerializeField] private float charStam = 100;
-    [SerializeField] private float charMaxStam;
-    [SerializeField] private float charManaPool;
-    [SerializeField] private float charMaxManaPool;
+    #region Structs
+    [Serializable]
+    public struct StatBlock
+    {
+        public string characterName;
+        public int value;
+        public int tempValue;
+    }
+    #endregion
 
+    #region Variables
+    public StatBlock[] charStats = new StatBlock[6];
     #endregion
 }
