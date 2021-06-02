@@ -22,7 +22,7 @@ public class Dialogue : MonoBehaviour
             return;
         if (Input.GetKeyDown(KeyCode.E))
         {
-
+            DialogueHandler.diaInstance.LoadDialogue(this);
         }
     }
 }
