@@ -26,6 +26,9 @@ public class DialogueHandler : MonoBehaviour
     }
     public void LoadDialogue(Dialogue _dialogue)
     {
+        Time.timeScale = 0;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
         transform.GetChild(0).gameObject.SetActive(true);
         loadedDialogue = _dialogue;
         int i = 0;
@@ -51,6 +54,9 @@ public class DialogueHandler : MonoBehaviour
     }
     void EndConvo()
     {
+        Time.timeScale = 1;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
         ClearButtons();
         print(loadedDialogue.farewell.npcResponse);
         DisplayResponse(loadedDialogue.farewell.npcResponse);
