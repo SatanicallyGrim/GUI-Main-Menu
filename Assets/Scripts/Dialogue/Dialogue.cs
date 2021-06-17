@@ -20,9 +20,9 @@ public class Dialogue : MonoBehaviour
     {
         if (!firstDialogue)
             return;
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            DialogueHandler.diaInstance.LoadDialogue(this);
-        }
+        //if (Input.GetKeyDown(KeyCode.E))
+        //{
+        //    DialogueHandler.diaInstance.LoadDialogue(this);
+        //}
     }
 }

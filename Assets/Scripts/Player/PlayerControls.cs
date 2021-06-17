@@ -12,6 +12,7 @@ public class PlayerControls : MonoBehaviour
     public bool isGrounded;
     private Vector3 jump;
     private Rigidbody rb;
+    [SerializeField] private Camera cam;
     
     #endregion
     // Start is called before the first frame update
@@ -24,6 +25,22 @@ public class PlayerControls : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (BindingManager.BindingPressed("Use"))
+        {
+            Vector3 rayOrigin = cam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f)); // Creates a Ray point at the center point of the screen via the cams ViewPort 
+            RaycastHit hit;
+            if (Physics.Raycast(rayOrigin,cam.transform.forward, out hit ,3))   // Checks if the ray hits anything
+            {
+                if(hit.transform.tag == "NPC")   // Checks Hit finds an object marked with the NPC Tag
+                {
+                    Dialogue _npcDialogue = hit.transform.GetComponent<Dialogue>();
+                    if (_npcDialogue)
+                    {
+                        DialogueHandler.diaInstance.LoadDialogue(_npcDialogue);   // Brings up the Dialogue Panel 
+                    }
+                }
+            }
+        }
         
         if (BindingManager.BindingHeld("Forward"))
         {
