@@ -13,7 +13,17 @@ public class EquipAndUse : MonoBehaviour
     public Transform weaponPos;
     public Transform apparelPos;
     #endregion
-    
+    private enum EquipPoints
+    {
+        head,
+        apparel,
+        weapon
+    }
+    private void Start()
+    {
+        
+    }
+
     public void EquipItemOnPlayer()
     {
         if (inv.selectedItem == null)
@@ -26,5 +36,7 @@ public class EquipAndUse : MonoBehaviour
             GameObject spawnedMesh = Instantiate(mesh, headPos);
             
         }
+        
     }
+    
 }

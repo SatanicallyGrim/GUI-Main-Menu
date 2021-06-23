@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2160316590054217554}
   - component: {fileID: 4528176298994846578}
   - component: {fileID: 3505143240978857175}
+  - component: {fileID: 948599095297094244}
   m_Layer: 0
   m_Name: axe
   m_TagString: Untagged
@@ -81,3 +82,26 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &948599095297094244
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4364807202807424251}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2de411a18b7f7e545ab3dfcc35155291, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  item:
+    name: Axe
+    description: Typically used for wood but works against heads
+    value: 25
+    amount: 1
+    icon: {fileID: 2800000, guid: 6a7ff0516ecbea34aaf7f034c2ee70f1, type: 3}
+    mesh: {fileID: 4364807202807424251}
+    type: 0
+    damage: 45
+    armour: 0
+    heal: 0
