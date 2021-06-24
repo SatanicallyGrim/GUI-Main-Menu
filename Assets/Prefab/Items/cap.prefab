@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 8740384432946486915}
   - component: {fileID: 4807660141737448782}
   - component: {fileID: 20747179096697445}
+  - component: {fileID: 2865662928019401050}
+  - component: {fileID: -3642406653049774846}
   m_Layer: 0
   m_Name: cap
   m_TagString: Untagged
@@ -81,3 +83,40 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &2865662928019401050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1305667868401645016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2de411a18b7f7e545ab3dfcc35155291, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  item:
+    name: Helmet
+    description: Gotta protect the noggin
+    value: 30
+    amount: 1
+    icon: {fileID: 2800000, guid: 1e2929d8355f8ee408ad99d873ff6205, type: 3}
+    mesh: {fileID: 1305667868401645016}
+    type: 1
+    damage: 0
+    armour: 15
+    heal: 0
+--- !u!64 &-3642406653049774846
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1305667868401645016}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 5216243977776925454, guid: cbebb73ba0d1d1a4ea8ec6ba293be721, type: 3}
